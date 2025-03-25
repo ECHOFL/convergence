@@ -1,0 +1,122 @@
+# Prison Mines Configuration
+# Version: 1.0.0
+
+# Rank Mines (A-Z)
+rankMines:
+  A:
+    name: "Mine A"
+    requiredRank: "A"
+    resetInterval: 300
+    composition:
+      STONE: 70.0
+      COAL_ORE: 20.0
+      IRON_ORE: 10.0
+    # pos1 and pos2 will be set in-game
+  
+  B:
+    name: "Mine B"
+    requiredRank: "B"
+    resetInterval: 300
+    composition:
+      STONE: 65.0
+      COAL_ORE: 20.0
+      IRON_ORE: 12.0
+      GOLD_ORE: 3.0
+  
+  C:
+    name: "Mine C"
+    requiredRank: "C"
+    resetInterval: 300
+    composition:
+      STONE: 60.0
+      COAL_ORE: 20.0
+      IRON_ORE: 15.0
+      GOLD_ORE: 4.0
+      LAPIS_ORE: 1.0
+  
+  D:
+    name: "Mine D"
+    requiredRank: "D"
+    resetInterval: 300
+    composition:
+      STONE: 55.0
+      COAL_ORE: 20.0
+      IRON_ORE: 15.0
+      GOLD_ORE: 6.0
+      LAPIS_ORE: 3.0
+      REDSTONE_ORE: 1.0
+  
+  # Continue with more mines...
+  
+  Z:
+    name: "Mine Z"
+    requiredRank: "Z"
+    resetInterval: 300
+    composition:
+      STONE: 30.0
+      COAL_ORE: 15.0
+      IRON_ORE: 15.0
+      GOLD_ORE: 15.0
+      LAPIS_ORE: 10.0
+      REDSTONE_ORE: 8.0
+      DIAMOND_ORE: 5.0
+      EMERALD_ORE: 2.0
+
+# Prestige Mines
+prestigeMines:
+  "1":
+    name: "Prestige Mine 1"
+    requiredPrestige: 1
+    resetInterval: 300
+    composition:
+      STONE: 25.0
+      COAL_ORE: 15.0
+      IRON_ORE: 15.0
+      GOLD_ORE: 15.0
+      LAPIS_ORE: 10.0
+      REDSTONE_ORE: 10.0
+      DIAMOND_ORE: 7.0
+      EMERALD_ORE: 3.0
+  
+  "5":
+    name: "Prestige Mine 5"
+    requiredPrestige: 5
+    resetInterval: 300
+    composition:
+      STONE: 20.0
+      COAL_ORE: 15.0
+      IRON_ORE: 15.0
+      GOLD_ORE: 15.0
+      LAPIS_ORE: 10.0
+      REDSTONE_ORE: 10.0
+      DIAMOND_ORE: 10.0
+      EMERALD_ORE: 5.0
+  
+  "10":
+    name: "Prestige Mine 10"
+    requiredPrestige: 10
+    resetInterval: 300
+    composition:
+      STONE: 15.0
+      COAL_ORE: 10.0
+      IRON_ORE: 15.0
+      GOLD_ORE: 15.0
+      LAPIS_ORE: 10.0
+      REDSTONE_ORE: 15.0
+      DIAMOND_ORE: 12.0
+      EMERALD_ORE: 8.0
+
+# Personal Mines
+# This section will be populated as players create personal mines
+personalMines:
+  # Example format:
+  # "player-uuid":
+  #   name: "Player's Mine"
+  #   resetInterval: 300
+  #   size: 1
+  #   resetSpeed: 1
+  #   compositionLevel: 1
+  #   composition:
+  #     STONE: 80.0
+  #     COAL_ORE: 15.0
+  #     IRON_ORE: 5.0

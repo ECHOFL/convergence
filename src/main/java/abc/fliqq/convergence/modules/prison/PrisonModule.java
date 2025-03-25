@@ -5,60 +5,82 @@ import org.bukkit.configuration.file.FileConfiguration;
 import abc.fliqq.convergence.Convergence;
 import abc.fliqq.convergence.core.PluginModule;
 import abc.fliqq.convergence.core.utils.LoggerUtil;
+import abc.fliqq.convergence.modules.prison.mine.MineManager;
 import lombok.Getter;
 
-public class PrisonModule extends PluginModule{
+public class PrisonModule extends PluginModule {
     private final Convergence plugin;
     @Getter private FileConfiguration config;
     
-    public PrisonModule(Convergence plugin){
+    // Managers
+    @Getter private MineManager mineManager;
+    
+    public PrisonModule(Convergence plugin) {
         this.plugin = plugin;
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return "Prison";
     }
+    
     @Override
-    public void onEnable(){
+    public void onEnable() {
         config = plugin.getConfigManager().createModuleConfiguration(this, "config.yml");
         setupDefaultConfig();
 
-        //Initialize managers
+        // Initialize managers
+        mineManager = new MineManager(this);
 
-        //Register commands
+        // Register commands
         registerCommands();
 
-        //Register Listeners
+        // Register Listeners
         registerListeners();
 
-        LoggerUtil.info(getName() + "module has been enabled!");
+        LoggerUtil.info(getName() + " module has been enabled!");
     }
+    
     @Override
-    public void onDisable(){
-        //Save Data Managers
+    public void onDisable() {
+        // Save Data Managers
+        if (mineManager != null) {
+            mineManager.shutdown();
+        }
         
-        LoggerUtil.info(getName() + "module has been disabled!");
+        LoggerUtil.info(getName() + " module has been disabled!");
     }
 
     @Override
-    public void onReload(){
+    public void onReload() {
         config = plugin.getConfigManager().getConfig("modules/prison/config.yml");
         
+        // Reload managers
+        if (mineManager != null) {
+            mineManager.reload();
+        }
 
-        //RELOAD managers
-
-        LoggerUtil.info(getName()+ "module has been reloaded!");
+        LoggerUtil.info(getName() + " module has been reloaded!");
     }
 
-    private void setupDefaultConfig(){
-        if(config.getKeys(false).isEmpty()){
+    private void setupDefaultConfig() {
+        if (config.getKeys(false).isEmpty()) {
+            // Mine settings
             config.set("mines.reset-interval", 300); // 5 minutes
             config.set("mines.broadcast-reset", true);
             
             // Default rank settings
             config.set("ranks.use-vault-integration", true);
             config.set("ranks.default-rank", "A");
+            
+            // Default prestige settings
+            config.set("prestige.personal-mine-unlock-level", 5);
+            
+            // Default personal mine settings
+            config.set("personal-mines.base-size", 5);
+            config.set("personal-mines.max-size-level", 10);
+            config.set("personal-mines.max-reset-speed-level", 10);
+            config.set("personal-mines.max-composition-level", 10);
             
             // Default enchant settings
             config.set("enchants.max-level", 1000);
@@ -68,12 +90,16 @@ public class PrisonModule extends PluginModule{
         }
     }
 
-    private void registerCommands(){
-        //TODO
+    private void registerCommands() {
+        // TODO: Register prison commands
+        // Example: new MineCommand(this);
     }
-    private void registerListeners(){
-        //TODO
+    
+    private void registerListeners() {
+        // TODO: Register prison listeners
+        // Example: plugin.getServer().getPluginManager().registerEvents(new MineListener(this), plugin);
     }
+    
     /**
      * Gets the main plugin instance
      * 

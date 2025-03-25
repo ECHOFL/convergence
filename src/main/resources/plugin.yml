@@ -1,0 +1,40 @@
+name: Convergence
+version: '1.0.0'
+main: abc.fliqq.convergence.Convergence
+api-version: '1.21.4'
+authors: [Fliqq]
+description: A comprehensive prison plugin with mines, ranks, and prestige system
+commands:
+  convergence:
+    description: Main command for the Convergence plugin
+    aliases: [cv]
+    usage: /convergence <subcommand>
+  prison:
+    description: Prison module commands
+    aliases: [p]
+    usage: /prison <subcommand>
+  mine:
+    description: Mine management commands
+    usage: /mine <subcommand>
+  rank:
+    description: Rank management commands
+    usage: /rank <subcommand>
+  prestige:
+    description: Prestige management commands
+    usage: /prestige <subcommand>
+permissions:
+  convergence.admin:
+    description: Gives access to all Convergence commands
+    default: op
+  convergence.prison.admin:
+    description: Gives access to all prison admin commands
+    default: op
+  convergence.mine.create:
+    description: Allows creating mines
+    default: op
+  convergence.mine.delete:
+    description: Allows deleting mines
+    default: op
+  convergence.mine.reset:
+    description: Allows resetting mines
+    default: op

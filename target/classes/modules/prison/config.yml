@@ -1,0 +1,114 @@
+# Prison Module Configuration
+# Version: 1.0.0
+
+# Mine settings
+mines:
+  reset-interval: 300 # 5 minutes
+  broadcast-reset: true
+  teleport-on-reset: true
+  teleport-location: "spawn" # spawn or entrance
+
+# Rank settings
+ranks:
+  use-vault-integration: true
+  default-rank: "A"
+  # Rank progression (A-Z)
+  progression:
+    A:
+      next: "B"
+      cost: 5000
+    B:
+      next: "C"
+      cost: 10000
+    C:
+      next: "D"
+      cost: 25000
+    D:
+      next: "E"
+      cost: 50000
+    E:
+      next: "F"
+      cost: 100000
+    F:
+      next: "G"
+      cost: 250000
+    # Continue with more ranks...
+    Z:
+      next: "none"
+      cost: 0
+
+# Prestige settings
+prestige:
+  personal-mine-unlock-level: 5
+  cost-multiplier: 1.5 # Each prestige costs 1.5x more than the previous
+  base-cost: 1000000
+  max-level: 100
+  benefits:
+    token-multiplier: 0.1 # +10% tokens per prestige level
+    sell-multiplier: 0.05 # +5% sell price per prestige level
+    mine-fortune: 0.02 # +2% fortune chance per prestige level
+
+# Personal mine settings
+personal-mines:
+  base-size: 5 # Base size in blocks (5x5)
+  max-size-level: 10
+  size-upgrade-cost-base: 50000
+  size-upgrade-cost-multiplier: 1.5
+  
+  max-reset-speed-level: 10
+  reset-speed-upgrade-cost-base: 75000
+  reset-speed-upgrade-cost-multiplier: 1.5
+  
+  max-composition-level: 10
+  composition-upgrade-cost-base: 100000
+  composition-upgrade-cost-multiplier: 1.5
+  
+  # Composition levels (materials and percentages)
+  compositions:
+    1:
+      STONE: 80.0
+      COAL_ORE: 15.0
+      IRON_ORE: 5.0
+    2:
+      STONE: 75.0
+      COAL_ORE: 15.0
+      IRON_ORE: 8.0
+      GOLD_ORE: 2.0
+    3:
+      STONE: 70.0
+      COAL_ORE: 15.0
+      IRON_ORE: 10.0
+      GOLD_ORE: 3.0
+      LAPIS_ORE: 2.0
+    # Continue with more levels...
+    10:
+      STONE: 40.0
+      COAL_ORE: 15.0
+      IRON_ORE: 15.0
+      GOLD_ORE: 10.0
+      LAPIS_ORE: 8.0
+      REDSTONE_ORE: 5.0
+      DIAMOND_ORE: 5.0
+      EMERALD_ORE: 2.0
+
+# Enchant settings
+enchants:
+  max-level: 1000
+  allow-combining: true
+  enchants:
+    efficiency:
+      max-level: 1000
+      cost-base: 1000
+      cost-multiplier: 1.2
+    fortune:
+      max-level: 1000
+      cost-base: 2000
+      cost-multiplier: 1.5
+    auto-smelt:
+      max-level: 1
+      cost-base: 50000
+      cost-multiplier: 1.0
+    token-finder:
+      max-level: 100
+      cost-base: 5000
+      cost-multiplier: 1.3

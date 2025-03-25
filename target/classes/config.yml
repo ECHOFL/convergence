@@ -1,0 +1,37 @@
+# Convergence Configuration
+# Version: 1.0.0
+
+# Debug mode - enables additional logging
+debug: false
+
+# Database settings
+database:
+  type: SQLITE # SQLITE, MYSQL
+  mysql:
+    host: localhost
+    port: 3306
+    database: convergence
+    username: root
+    password: password
+    ssl: false
+  
+# Module settings
+modules:
+  # Enable or disable modules
+  prison: true
+  skyblock: false
+  economy: true
+  shop: true
+  
+# Global settings
+settings:
+  language: en #Only available atm
+  prefix: '&8[&bConvergence&8] &r'
+  
+# Performance settings
+performance:
+  async-tasks: true
+  cache-timeout: 300 # seconds
+  
+# Don't modify this
+config-version: 1

@@ -1,0 +1,56 @@
+# Convergence Messages
+# Version: 1.0.0
+
+# General messages
+general:
+  prefix: '&8[&bConvergence&8] &r'
+  no-permission: '&cYou do not have permission to use this command.'
+  player-only: '&cThis command can only be used by players.'
+  reload-success: '&aConfiguration reloaded successfully.'
+  invalid-command: '&cInvalid command. Use &7/{command} help &cfor help.'
+  invalid-player: '&cPlayer not found.'
+  
+# Prison module messages
+prison:
+  prefix: '&8[&bPrison&8] &r'
+  
+  # Mine messages
+  mine:
+    created: '&aMine &7{name} &ahas been created successfully.'
+    deleted: '&aMine &7{name} &ahas been deleted successfully.'
+    reset: '&aMine &7{name} &ahas been reset.'
+    reset-broadcast: '&a&l{name} &ehas been reset!'
+    teleported: '&aYou have been teleported to &7{name}&a.'
+    set-pos1: '&aPosition 1 set for mine &7{name}&a.'
+    set-pos2: '&aPosition 2 set for mine &7{name}&a.'
+    invalid-mine: '&cMine &7{name} &cdoes not exist.'
+    already-exists: '&cMine &7{name} &calready exists.'
+    no-region: '&cMine &7{name} &cdoes not have a valid region.'
+    composition-updated: '&aComposition for mine &7{name} &ahas been updated.'
+    
+  # Rank messages
+  rank:
+    rankup-success: '&aYou have ranked up to &7{rank}&a!'
+    rankup-fail: '&cYou need &7${cost} &cto rank up to &7{rank}&c.'
+    rankup-max: '&cYou are already at the maximum rank.'
+    current-rank: '&aYour current rank is &7{rank}&a.'
+    set-rank: '&aSet &7{player}''s &arank to &7{rank}&a.'
+    
+  # Prestige messages
+  prestige:
+    prestige-success: '&aYou have prestiged to level &7{level}&a!'
+    prestige-fail: '&cYou need to be at max rank to prestige.'
+    prestige-cost: '&cYou need &7${cost} &cto prestige.'
+    current-prestige: '&aYour current prestige level is &7{level}&a.'
+    set-prestige: '&aSet &7{player}''s &aprestige to &7{level}&a.'
+    
+  # Personal mine messages
+  personal-mine:
+    created: '&aYour personal mine has been created!'
+    teleport: '&aYou have been teleported to your personal mine.'
+    not-unlocked: '&cYou have not unlocked your personal mine yet.'
+    upgrade-size-success: '&aYou have upgraded your mine size to level &7{level}&a!'
+    upgrade-reset-success: '&aYou have upgraded your mine reset speed to level &7{level}&a!'
+    upgrade-composition-success: '&aYou have upgraded your mine composition to level &7{level}&a!'
+    max-level: '&cThis upgrade is already at maximum level.'
+    insufficient-funds: '&cYou need &7${cost} &cto purchase this upgrade.'
