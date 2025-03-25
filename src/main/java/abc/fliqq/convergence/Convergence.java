@@ -1,7 +1,7 @@
 package abc.fliqq.convergence;
 
-public class Convergence {
-    public static void main(String[] args) {
-        System.out.println("Hello world!");
-    }
+import org.bukkit.plugin.java.JavaPlugin;
+
+public class Convergence extends JavaPlugin{
+
 }
