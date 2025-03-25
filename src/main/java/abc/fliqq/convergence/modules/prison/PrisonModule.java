@@ -5,6 +5,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import abc.fliqq.convergence.Convergence;
 import abc.fliqq.convergence.core.PluginModule;
 import abc.fliqq.convergence.core.utils.LoggerUtil;
+import abc.fliqq.convergence.modules.prison.mine.MineCommand;
 import abc.fliqq.convergence.modules.prison.mine.MineManager;
 import lombok.Getter;
 
@@ -92,8 +93,8 @@ public class PrisonModule extends PluginModule {
 
     private void registerCommands() {
         // TODO: Register prison commands
-        // Example: new MineCommand(this);
-    }
+        new MineCommand(plugin, this);
+    }  
     
     private void registerListeners() {
         // TODO: Register prison listeners

@@ -2,54 +2,94 @@ package abc.fliqq.convergence;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import abc.fliqq.convergence.core.ModuleManager;
+import abc.fliqq.convergence.core.PluginModule;
 import abc.fliqq.convergence.core.config.ConfigManager;
-import abc.fliqq.convergence.core.config.MessageManager;
-import abc.fliqq.convergence.core.utils.LoggerUtil;
+import abc.fliqq.convergence.core.services.MessageService;
+import abc.fliqq.convergence.modules.prison.PrisonModule;
 import lombok.Getter;
 
-public class Convergence extends JavaPlugin{
+import java.util.ArrayList;
+import java.util.List;
 
-    @Getter
+public class Convergence extends JavaPlugin {
+    
     private static Convergence instance;
-    @Getter
-    private ModuleManager moduleManager;
-    @Getter
-    private ConfigManager configManager;
-    @Getter
-    private MessageManager messageManager;
-    // private MessageManager
-
+    
+    @Getter private ConfigManager configManager;
+    @Getter private MessageService messageService;
+    
+    private final List<abc.fliqq.convergence.core.PluginModule> modules = new ArrayList<>();
+    
     @Override
-    public void onEnable(){
-        instance=this;
+    public void onEnable() {
+        instance = this;
+        
+        // Initialize managers
+        configManager = new ConfigManager(this);
+        
+        // Load configuration
+        configManager.loadConfig("config.yml");
+        configManager.loadConfig("messages.yml");
+        
+        //initilize services
+        messageService = new MessageService(this);
 
-        // this.configManager=new ConfigManager(this);
-        this.moduleManager=new ModuleManager();
 
-        //load configurations
-        configManager.loadConfigs();
-
-        registerModules();
-
-        LoggerUtil.info("Convergence has been enabled!");
+        // Initialize modules
+        initializeModules();
+        
+        getLogger().info("Convergence has been enabled!");
     }
-
+    
     @Override
-    public void onDisable(){
-        if(moduleManager!=null){
-            moduleManager.disableModules();
+    public void onDisable() {
+        // Disable modules in reverse order
+        for (int i = modules.size() - 1; i >= 0; i--) {
+            modules.get(i).onDisable();
         }
-        LoggerUtil.info("Convergence has been disabled!");
+        
+        getLogger().info("Convergence has been disabled!");
     }
-    private void registerModules(){
-        // moduleManager.registerModule(new ExampleModule());
+    
+    /**
+     * Initializes all plugin modules
+     */
+    private void initializeModules() {
+        // Check which modules are enabled in config
+        if (configManager.getMainConfig().getBoolean("modules.prison", true)) {
+            PrisonModule prisonModule = new PrisonModule(this);
+            modules.add(prisonModule);
+            prisonModule.onEnable();
+        }
+        
+        // Add other modules here
     }
-
-    public void reload(){
-        configManager.reloadConfigs();
-        messageManager.reloadMessages();
-        moduleManager.reloadModules();
-        LoggerUtil.info("Convergence has been reloaded!");
+    
+    /**
+     * Reloads the plugin
+     */
+    public void reload() {
+        // Reload configuration
+        configManager.reloadConfig("config.yml");
+        configManager.reloadConfig("messages.yml");
+        
+        // Reload message service
+        messageService.reload();
+        
+        // Reload modules
+        for (PluginModule module : modules) {
+            module.onReload();
+        }
+        
+        getLogger().info("Convergence has been reloaded!");
+    }
+    
+    /**
+     * Gets the plugin instance
+     * 
+     * @return The plugin instance
+     */
+    public static Convergence getInstance() {
+        return instance;
     }
 }

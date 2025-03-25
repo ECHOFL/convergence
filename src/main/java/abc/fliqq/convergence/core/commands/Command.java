@@ -6,15 +6,12 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import abc.fliqq.convergence.Convergence;
-import abc.fliqq.convergence.core.utils.MessageUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.bukkit.command.PluginCommand;
 
 /**
  * Base command class for the command framework
@@ -56,7 +53,7 @@ public abstract class Command implements CommandExecutor, TabCompleter {
      * Registers the command with Bukkit
      */
     private void register() {
-        PluginCommand command = plugin.getCommand(name);
+        org.bukkit.command.PluginCommand command = plugin.getCommand(name);
         
         if (command != null) {
             command.setExecutor(this);
@@ -153,13 +150,13 @@ public abstract class Command implements CommandExecutor, TabCompleter {
     public boolean onCommand(org.bukkit.command.CommandSender sender, org.bukkit.command.Command cmd, String label, String[] args) {
         // Check if sender is a player if command is player-only
         if (playerOnly && !(sender instanceof Player)) {
-            MessageUtil.sendMessage(sender, "general.player-only");
+            plugin.getMessageService().sendMessage(sender, "general.player-only");
             return true;
         }
         
         // Check permission
         if (!permission.isEmpty() && !sender.hasPermission(permission)) {
-            MessageUtil.sendMessage(sender, "general.no-permission");
+            plugin.getMessageService().sendMessage(sender, "general.no-permission");
             return true;
         }
         
@@ -169,13 +166,13 @@ public abstract class Command implements CommandExecutor, TabCompleter {
             if (subCommand != null) {
                 // Check subcommand permission
                 if (!subCommand.getPermission().isEmpty() && !sender.hasPermission(subCommand.getPermission())) {
-                    MessageUtil.sendMessage(sender, "general.no-permission");
+                    plugin.getMessageService().sendMessage(sender, "general.no-permission");
                     return true;
                 }
                 
                 // Check if subcommand is player-only
                 if (subCommand.isPlayerOnly() && !(sender instanceof Player)) {
-                    MessageUtil.sendMessage(sender, "general.player-only");
+                    plugin.getMessageService().sendMessage(sender, "general.player-only");
                     return true;
                 }
                 

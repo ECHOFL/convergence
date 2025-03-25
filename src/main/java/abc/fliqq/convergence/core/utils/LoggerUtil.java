@@ -78,6 +78,7 @@ public class LoggerUtil {
      * @param message The message to log
      */
     public static void console(String message) {
-        Bukkit.getConsoleSender().sendMessage(ColorUtil.colorize(message));
+        // Use MessageService instead of ColorUtil
+        Bukkit.getConsoleSender().sendMessage(Convergence.getInstance().getMessageService().colorize(message));
     }
 }

@@ -4,11 +4,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import abc.fliqq.convergence.Convergence;
 import abc.fliqq.convergence.core.PluginModule;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -41,24 +44,55 @@ public class MessageService {
     /**
      * Reloads the message service
      */
-    public void reload() {
-        messages = plugin.getConfigManager().getConfig("messages.yml");
-        if (messages == null) {
-            plugin.getLogger().severe("Failed to load messages.yml");
-            return;
-        }
+public void reload() {
+    messages = plugin.getConfigManager().getConfig("messages.yml");
+    if (messages == null) {
+        plugin.getLogger().severe("Failed to load messages.yml - creating default messages");
         
-        prefix = colorize(messages.getString("general.prefix", "&8[&bConvergence&8] &r"));
+        // Create a default configuration
+        messages = new YamlConfiguration();
+        messages.set("general.prefix", "&8[&bConvergence&8] &r");
+        messages.set("general.no-permission", "&cYou do not have permission to use this command.");
+        messages.set("general.player-only", "&cThis command can only be used by players.");
+        messages.set("general.invalid-command", "&cInvalid command. Use &7/{command} help &cfor help.");
         
-        // Load module prefixes
-        modulePrefixes.clear();
-        for (String key : messages.getKeys(false)) {
-            if (messages.isConfigurationSection(key) && messages.contains(key + ".prefix")) {
-                String modulePrefix = colorize(messages.getString(key + ".prefix"));
-                modulePrefixes.put(key, modulePrefix);
-            }
+        // Add prison module messages
+        messages.set("prison.prefix", "&8[&bPrison&8] &r");
+        messages.set("prison.mine.created", "&aMine &7{name} &ahas been created successfully.");
+        messages.set("prison.mine.deleted", "&aMine &7{name} &ahas been deleted successfully.");
+        messages.set("prison.mine.invalid-mine", "&cMine &7{name} &cdoes not exist.");
+        messages.set("prison.mine.invalid-type", "&cInvalid mine type: &7{type}");
+        messages.set("prison.mine.already-exists", "&cMine &7{name} &calready exists.");
+        messages.set("prison.mine.no-region", "&cMine &7{name} &cdoes not have a valid region.");
+        messages.set("prison.mine.set-pos1", "&aPosition 1 set for mine &7{name}&a.");
+        messages.set("prison.mine.set-pos2", "&aPosition 2 set for mine &7{name}&a.");
+        messages.set("prison.mine.reset", "&aMine &7{name} &ahas been reset.");
+        messages.set("prison.mine.teleported", "&aYou have been teleported to &7{name}&a.");
+        messages.set("prison.mine.composition-updated", "&aComposition for mine &7{name} &ahas been updated.");
+        
+        // Save the default configuration
+        try {
+            File messagesFile = new File(plugin.getDataFolder(), "messages.yml");
+            messages.save(messagesFile);
+            plugin.getLogger().info("Created default messages.yml file");
+        } catch (IOException e) {
+            plugin.getLogger().severe("Failed to save default messages.yml file");
+            e.printStackTrace();
         }
     }
+    
+    // Now we can safely use messages
+    prefix = colorize(messages.getString("general.prefix", "&8[&bConvergence&8] &r"));
+    
+    // Load module prefixes
+    modulePrefixes.clear();
+    for (String key : messages.getKeys(false)) {
+        if (messages.isConfigurationSection(key) && messages.contains(key + ".prefix")) {
+            String modulePrefix = colorize(messages.getString(key + ".prefix"));
+            modulePrefixes.put(key, modulePrefix);
+        }
+    }
+}
     
     /**
      * Registers a module with the message service

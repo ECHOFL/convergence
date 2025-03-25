@@ -1,1 +1,13 @@
+/home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/modules/prison/PrisonModule.java
+/home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/modules/prison/mine/MineCommand.java
+/home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/core/config/ConfigManager.java
+/home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/core/ModuleManager.java
+/home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/modules/prison/mine/Mine.java
+/home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/core/commands/Command.java
+/home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/core/commands/SubCommand.java
+/home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/modules/prison/mine/MineManager.java
+/home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/core/utils/LoggerUtil.java
+/home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/core/utils/ColorUtil.java
 /home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/Convergence.java
+/home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/core/PluginModule.java
+/home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/core/services/MessageService.java
