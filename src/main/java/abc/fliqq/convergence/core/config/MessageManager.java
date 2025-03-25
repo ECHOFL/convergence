@@ -1,4 +1,4 @@
-package abc.fliqq.convergence.core.utils;
+package abc.fliqq.convergence.core.config;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 
 import abc.fliqq.convergence.Convergence;
 import abc.fliqq.convergence.core.PluginModule;
+import abc.fliqq.convergence.core.utils.ColorUtil;
 
 public class MessageManager{
 

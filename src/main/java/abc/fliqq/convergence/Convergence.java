@@ -2,10 +2,10 @@ package abc.fliqq.convergence;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import abc.fliqq.convergence.core.ConfigManager;
 import abc.fliqq.convergence.core.ModuleManager;
+import abc.fliqq.convergence.core.config.ConfigManager;
+import abc.fliqq.convergence.core.config.MessageManager;
 import abc.fliqq.convergence.core.utils.LoggerUtil;
-import abc.fliqq.convergence.core.utils.MessageManager;
 import lombok.Getter;
 
 public class Convergence extends JavaPlugin{

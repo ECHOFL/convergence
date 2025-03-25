@@ -1,4 +1,4 @@
-package abc.fliqq.convergence.core;
+package abc.fliqq.convergence.core.config;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,6 +9,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import abc.fliqq.convergence.Convergence;
+import abc.fliqq.convergence.core.PluginModule;
 import abc.fliqq.convergence.core.utils.LoggerUtil;
 import lombok.Getter;
 
