@@ -125,21 +125,30 @@ public class MineManager {
             for (String key : rankMinesSection.getKeys(false)) {
                 ConfigurationSection mineSection = rankMinesSection.getConfigurationSection(key);
                 if (mineSection == null) continue;
-                
+    
                 String name = mineSection.getString("name", key);
                 String requiredRank = mineSection.getString("requiredRank", key);
                 int resetInterval = mineSection.getInt("resetInterval", defaultResetInterval);
-                
-                Mine mine = new Mine(key, name, MineType.RANK, resetInterval);
+    
+                Mine mine = rankMines.get(key); // Vérifie si la mine existe déjà
+                if (mine == null) {
+                    mine = new Mine(key, name, MineType.RANK, resetInterval);
+                    rankMines.put(key, mine);
+                }
+    
+                // Met à jour les propriétés de la mine
+                mine.setName(name);
+                mine.setResetInterval(resetInterval);
                 mine.setRequiredRank(requiredRank);
-                
+    
                 if (mineSection.contains("pos1") && mineSection.contains("pos2")) {
                     mine.setPos1(deserializeLocation(mineSection.getConfigurationSection("pos1")));
                     mine.setPos2(deserializeLocation(mineSection.getConfigurationSection("pos2")));
                 }
-                
+    
                 ConfigurationSection compositionSection = mineSection.getConfigurationSection("composition");
                 if (compositionSection != null) {
+                    mine.clearComposition(); // Efface l'ancienne composition
                     for (String material : compositionSection.getKeys(false)) {
                         try {
                             Material mat = Material.valueOf(material);
@@ -150,8 +159,7 @@ public class MineManager {
                         }
                     }
                 }
-                
-                rankMines.put(key, mine);
+    
                 LoggerUtil.info("Loaded rank mine: " + name);
             }
         }

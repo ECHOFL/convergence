@@ -161,4 +161,8 @@ public class Mine {
         compositionLevel++;
         return true;
     }
+
+    public void clearComposition() {
+        this.composition.clear();
+    }
 }

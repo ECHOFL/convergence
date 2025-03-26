@@ -1,5 +1,7 @@
 package abc.fliqq.convergence.core.utils;
 
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import net.md_5.bungee.api.ChatColor;
 
 import java.util.regex.Matcher;
@@ -84,4 +86,44 @@ public class ColorUtil {
         
         return result.toString();
     }
+
+    public static TextColor parseColor(String colorCode) {
+        if (colorCode == null || colorCode.isEmpty()) {
+            return NamedTextColor.WHITE; // Couleur par défaut
+        }
+    
+        if (colorCode.startsWith("&")) {
+            char colorChar = colorCode.charAt(1);
+            NamedTextColor namedColor = switch (colorChar) {
+                case '0' -> NamedTextColor.BLACK;
+                case '1' -> NamedTextColor.DARK_BLUE;
+                case '2' -> NamedTextColor.DARK_GREEN;
+                case '3' -> NamedTextColor.DARK_AQUA;
+                case '4' -> NamedTextColor.DARK_RED;
+                case '5' -> NamedTextColor.DARK_PURPLE;
+                case '6' -> NamedTextColor.GOLD;
+                case '7' -> NamedTextColor.GRAY;
+                case '8' -> NamedTextColor.DARK_GRAY;
+                case '9' -> NamedTextColor.BLUE;
+                case 'a', 'A' -> NamedTextColor.GREEN;
+                case 'b', 'B' -> NamedTextColor.AQUA;
+                case 'c', 'C' -> NamedTextColor.RED;
+                case 'd', 'D' -> NamedTextColor.LIGHT_PURPLE;
+                case 'e', 'E' -> NamedTextColor.YELLOW;
+                case 'f', 'F' -> NamedTextColor.WHITE;
+                default -> null;
+            };
+            if (namedColor != null) {
+                return namedColor;
+            }
+        }
+    
+        // Essaye de parser la chaîne comme une couleur hexadécimale
+        try {
+            return TextColor.fromHexString(colorCode);
+        } catch (IllegalArgumentException e) {
+            return NamedTextColor.WHITE;
+        }
+    }
+
 }

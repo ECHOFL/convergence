@@ -1,0 +1,72 @@
+
+enchant-definitions:
+  efficiency:
+    name: "Efficiency"
+    max-level: 30
+    cost: 50
+    description: "Améliore l'efficacité de l'outil en réduisant le temps de minage."
+    prix-multi: 0
+    color: "&a"
+  fortune:
+    name: "Fortune"
+    max-level: 25000
+    cost: 50
+    description: "Augmente les chances de récupérer des ressources supplémentaires lors du minage."
+    prix-multi: 1
+    color: "&b"
+  explosion:
+    name: "Explosion"
+    max-level: 5000
+    cost: 200
+    description: "Déclenche une explosion contrôlée pour miner plusieurs blocs à la fois."
+    prix-multi: 2
+    color: "&c"
+  laser:
+    name: "Laser"
+    max-level: 5000
+    cost: 300
+    description: "Utilise la précision d'un laser pour miner avec efficacité et rapidité."
+    prix-multi: 3
+    color: "&d"
+  visionnocturne:
+    name: "VisionNocturne"
+    max-level: 1
+    cost: 10000
+    description: "Accorde une vision nocturne permettant de miner dans l'obscurité."
+    prix-multi: 4
+    color: "&e"
+  speed:
+    name: "Speed"
+    max-level: 6
+    cost: 10000
+    description: "Augmente considérablement la vitesse de minage de l'outil."
+    prix-multi: 5
+    color: "&f"
+  tokenextracteur:
+    name: "TokenExtracteur"
+    max-level: 10000
+    cost: 300
+    description: "Favorise la récupération de tokens lors du minage."
+    prix-multi: 6
+    color: "&2"
+  haste:
+    name: "Haste"
+    max-level: 10
+    cost: 10000
+    description: "Accroît temporairement la cadence de minage."
+    prix-multi: 7
+    color: "&3"
+  marteaupiqueur:
+    name: "MarteauPiqueur"
+    max-level: 10000
+    cost: 500
+    description: "Permet de miner plusieurs blocs simultanément avec un effet de marteau-piqueur."
+    prix-multi: 8
+    color: "&6"
+  atomique:
+    name: "Atomique"
+    max-level: 10000
+    cost: 400
+    description: "Délivre une puissance atomique pour détruire efficacement des structures de blocs."
+    prix-multi: 9
+    color: "&9"

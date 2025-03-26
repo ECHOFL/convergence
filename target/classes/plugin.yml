@@ -38,3 +38,6 @@ permissions:
   convergence.mine.reset:
     description: Allows resetting mines
     default: op
+  convergence.mine.reload:
+    description: Allows reloading the mines configuration
+    default: op

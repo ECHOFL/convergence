@@ -4,6 +4,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import abc.fliqq.convergence.core.PluginModule;
 import abc.fliqq.convergence.core.config.ConfigManager;
+import abc.fliqq.convergence.core.services.DatabaseConnector;
 import abc.fliqq.convergence.core.services.MessageService;
 import abc.fliqq.convergence.modules.prison.PrisonModule;
 import lombok.Getter;
@@ -17,13 +18,15 @@ public class Convergence extends JavaPlugin {
     
     @Getter private ConfigManager configManager;
     @Getter private MessageService messageService;
+    @Getter private DatabaseConnector databaseConnector;
     
     private final List<abc.fliqq.convergence.core.PluginModule> modules = new ArrayList<>();
     
     @Override
     public void onEnable() {
         instance = this;
-        
+
+
         // Initialize managers
         configManager = new ConfigManager(this);
         
@@ -31,6 +34,9 @@ public class Convergence extends JavaPlugin {
         configManager.loadConfig("config.yml");
         configManager.loadConfig("messages.yml");
         
+        //Initialize Db connection
+        databaseConnector = new DatabaseConnector(configManager.getMainConfig());
+
         //initilize services
         messageService = new MessageService(this);
 

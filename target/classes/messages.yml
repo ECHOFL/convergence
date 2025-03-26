@@ -16,6 +16,7 @@ prison:
   
   # Mine messages
   mine:
+    reload-success: '&aMines configuration has been reloaded successfully!'
     created: '&aMine &7{name} &ahas been created successfully.'
     deleted: '&aMine &7{name} &ahas been deleted successfully.'
     reset: '&aMine &7{name} &ahas been reset.'
@@ -35,6 +36,7 @@ prison:
     rankup-max: '&cYou are already at the maximum rank.'
     current-rank: '&aYour current rank is &7{rank}&a.'
     set-rank: '&aSet &7{player}''s &arank to &7{rank}&a.'
+    
     
   # Prestige messages
   prestige:

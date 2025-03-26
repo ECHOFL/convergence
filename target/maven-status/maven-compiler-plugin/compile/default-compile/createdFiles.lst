@@ -19,6 +19,7 @@ abc/fliqq/convergence/modules/prison/mine/MineCommand$CreateSubCommand.class
 abc/fliqq/convergence/modules/prison/mine/MineCommand$ResetSubCommand.class
 abc/fliqq/convergence/core/config/ConfigManager.class
 abc/fliqq/convergence/modules/prison/mine/MineCommand$DeleteSubCommand.class
+abc/fliqq/convergence/modules/prison/mine/MineCommand$ReloadSubCommand.class
 abc/fliqq/convergence/modules/prison/mine/MineCommand$ListSubCommand.class
 abc/fliqq/convergence/core/services/MessageService.class
 abc/fliqq/convergence/modules/prison/mine/MineCommand$CompositionSubCommand.class

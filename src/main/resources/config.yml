@@ -6,7 +6,7 @@ debug: false
 
 # Database settings
 database:
-  type: SQLITE # SQLITE, MYSQL
+  type: MYSQL # SQLITE, MYSQL
   mysql:
     host: localhost
     port: 3306
@@ -21,7 +21,6 @@ modules:
   prison: true
   skyblock: false
   economy: true
-  shop: true
   
 # Global settings
 settings:

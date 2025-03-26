@@ -17,16 +17,13 @@ import abc.fliqq.convergence.Convergence;
 import abc.fliqq.convergence.core.commands.Command;
 import abc.fliqq.convergence.core.commands.SubCommand;
 import abc.fliqq.convergence.modules.prison.PrisonModule;
-import abc.fliqq.convergence.modules.prison.mine.Mine;
 import abc.fliqq.convergence.modules.prison.mine.Mine.MineType;
-import abc.fliqq.convergence.modules.prison.mine.MineManager;
 
 /**
  * Command for managing mines
  */
 public class MineCommand extends Command {
     
-    private final PrisonModule module;
     private final MineManager mineManager;
     
     /**
@@ -37,7 +34,6 @@ public class MineCommand extends Command {
      */
     public MineCommand(Convergence plugin, PrisonModule module) {
         super(plugin, "mine", "convergence.mine", false);
-        this.module = module;
         this.mineManager = module.getMineManager();
         
         // Set command details
@@ -60,6 +56,7 @@ public class MineCommand extends Command {
         addSubCommand(new SetPosSubCommand());
         addSubCommand(new ResetSubCommand());
         addSubCommand(new CompositionSubCommand());
+        addSubCommand(new ReloadSubCommand());
     }
     
     @Override
@@ -879,4 +876,27 @@ public class MineCommand extends Command {
             return new ArrayList<>();
         }
     }
+
+    private class ReloadSubCommand extends SubCommand {
+
+        public ReloadSubCommand() {
+            super("reload", "convergence.mine.reload", false);
+        }
+    
+        @Override
+        public boolean execute(CommandSender sender, String[] args) {
+            // Reload the mines configuration
+            mineManager.reload();
+    
+            // Send confirmation message
+            plugin.getMessageService().sendMessage(sender, "prison.mine.reload-success");
+            return true;
+        }
+    
+        @Override
+        public List<String> tabComplete(CommandSender sender, String[] args) {
+            return new ArrayList<>(); 
+        }
+    }
+    
 }

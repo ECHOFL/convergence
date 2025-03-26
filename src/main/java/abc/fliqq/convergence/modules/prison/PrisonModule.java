@@ -5,13 +5,14 @@ import org.bukkit.configuration.file.FileConfiguration;
 import abc.fliqq.convergence.Convergence;
 import abc.fliqq.convergence.core.PluginModule;
 import abc.fliqq.convergence.core.utils.LoggerUtil;
+import abc.fliqq.convergence.modules.prison.connection.PlayerEnchantDataService;
 import abc.fliqq.convergence.modules.prison.mine.MineCommand;
 import abc.fliqq.convergence.modules.prison.mine.MineManager;
 import lombok.Getter;
 
 public class PrisonModule extends PluginModule {
     private final Convergence plugin;
-    @Getter private FileConfiguration config;
+    @Getter private FileConfiguration prisonConfig;
     
     // Managers
     @Getter private MineManager mineManager;
@@ -27,8 +28,11 @@ public class PrisonModule extends PluginModule {
     
     @Override
     public void onEnable() {
-        config = plugin.getConfigManager().createModuleConfiguration(this, "config.yml");
+        prisonConfig = plugin.getConfigManager().createModuleConfiguration(this, "config.yml");
         setupDefaultConfig();
+
+        //Connnection to enchant table
+        new PlayerEnchantDataService(plugin.getDatabaseConnector(), prisonConfig);
 
         // Initialize managers
         mineManager = new MineManager(this);
@@ -54,7 +58,7 @@ public class PrisonModule extends PluginModule {
 
     @Override
     public void onReload() {
-        config = plugin.getConfigManager().getConfig("modules/prison/config.yml");
+        prisonConfig = plugin.getConfigManager().getConfig("modules/prison/config.yml");
         
         // Reload managers
         if (mineManager != null) {
@@ -65,27 +69,27 @@ public class PrisonModule extends PluginModule {
     }
 
     private void setupDefaultConfig() {
-        if (config.getKeys(false).isEmpty()) {
+        if (prisonConfig.getKeys(false).isEmpty()) {
             // Mine settings
-            config.set("mines.reset-interval", 300); // 5 minutes
-            config.set("mines.broadcast-reset", true);
+            prisonConfig.set("mines.reset-interval", 300); // 5 minutes
+            prisonConfig.set("mines.broadcast-reset", true);
             
             // Default rank settings
-            config.set("ranks.use-vault-integration", true);
-            config.set("ranks.default-rank", "A");
+            prisonConfig.set("ranks.use-vault-integration", true);
+            prisonConfig.set("ranks.default-rank", "A");
             
             // Default prestige settings
-            config.set("prestige.personal-mine-unlock-level", 5);
+            prisonConfig.set("prestige.personal-mine-unlock-level", 5);
             
             // Default personal mine settings
-            config.set("personal-mines.base-size", 5);
-            config.set("personal-mines.max-size-level", 10);
-            config.set("personal-mines.max-reset-speed-level", 10);
-            config.set("personal-mines.max-composition-level", 10);
+            prisonConfig.set("personal-mines.base-size", 5);
+            prisonConfig.set("personal-mines.max-size-level", 10);
+            prisonConfig.set("personal-mines.max-reset-speed-level", 10);
+            prisonConfig.set("personal-mines.max-composition-level", 10);
             
             // Default enchant settings
-            config.set("enchants.max-level", 1000);
-            config.set("enchants.allow-combining", true);
+            prisonConfig.set("enchants.max-level", 1000);
+            prisonConfig.set("enchants.allow-combining", true);
 
             plugin.getConfigManager().saveConfig("modules/prison/config.yml");
         }
