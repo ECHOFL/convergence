@@ -33,6 +33,13 @@ public class PlayerEnchantDataService {
         // Récupération de la section 'enchants.db' depuis prison/config.yml
         ConfigurationSection enchantsSection = prisonConfig.getConfigurationSection("enchants");
         this.enchantTable = enchantsSection.getString("table");
+
+        // Vérification de l'existence de la table et des colonnes
+        try {
+            verifyAndUpdateTable(enchantsSection.getKeys(false));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -123,5 +130,60 @@ public class PlayerEnchantDataService {
             insertStmt.executeUpdate();
         }
     }
+
+
+    /**
+     * Vérifie si la table des niveaux d'enchantements existe et si elle possède bien toutes les colonnes correspondant
+     * aux clés d'enchantements définies dans la configuration (via EnchantsManager). 
+     * - Si la table n'existe pas, elle est créée avec la colonne 'player_id' et une colonne INT par enchant initialisée à 0.
+     * - Si la table existe déjà, les colonnes manquantes sont ajoutées.
+     *
+     * @param enchantKeys ensemble des clés d'enchantements disponibles (obtenu depuis EnchantsManager).
+     * @throws SQLException en cas d'erreur d'accès à la BDD.
+     */
+    public void verifyAndUpdateTable(Set<String> enchantKeys) throws SQLException {
+        try (Connection connection = databaseConnector.getConnection()) {
+            // Utiliser les métadonnées pour vérifier si la table existe
+            boolean tableExists = false;
+            var metaData = connection.getMetaData();
+            try (ResultSet tables = metaData.getTables(null, null, enchantTable, new String[]{"TABLE"})) {
+                if (tables.next()) {
+                    tableExists = true;
+                }
+            }
+    
+            if (!tableExists) {
+                // La table n'existe pas, on la crée avec une colonne 'player_id' (PK) et une colonne pour chaque enchantement
+                StringBuilder createQuery = new StringBuilder("CREATE TABLE " + enchantTable + " (player_id VARCHAR(36) PRIMARY KEY");
+                for (String key : enchantKeys) {
+                    createQuery.append(", ").append(key).append(" INT DEFAULT 0");
+                }
+                createQuery.append(")");
+                try (PreparedStatement stmt = connection.prepareStatement(createQuery.toString())) {
+                    stmt.executeUpdate();
+                }
+            } else {
+                // La table existe : on vérifie les colonnes existantes pour ajouter celles manquantes.
+                Map<String, Boolean> existingColumns = new HashMap<>();
+                try (ResultSet columns = metaData.getColumns(null, null, enchantTable, null)) {
+                    while (columns.next()) {
+                        String columnName = columns.getString("COLUMN_NAME");
+                        existingColumns.put(columnName.toLowerCase(), true);
+                    }
+                }
+    
+                // Pour chaque enchant key défini dans la configuration, on ajoute la colonne si elle n'existe pas
+                for (String key : enchantKeys) {
+                    if (!existingColumns.containsKey(key.toLowerCase())) {
+                        String alterQuery = "ALTER TABLE " + enchantTable + " ADD COLUMN " + key + " INT DEFAULT 0";
+                        try (PreparedStatement stmt = connection.prepareStatement(alterQuery)) {
+                            stmt.executeUpdate();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 
 }
