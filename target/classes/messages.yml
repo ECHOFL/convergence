@@ -1,3 +1,4 @@
+
 # Convergence Messages
 # Version: 1.0.0
 
@@ -9,7 +10,7 @@ general:
   reload-success: '&aConfiguration reloaded successfully.'
   invalid-command: '&cInvalid command. Use &7/{command} help &cfor help.'
   invalid-player: '&cPlayer not found.'
-  
+
 # Prison module messages
 prison:
   prefix: '&8[&bPrison&8] &r'
@@ -28,4 +29,13 @@ prison:
     already-exists: '&cMine &7{name} &calready exists.'
     no-region: '&cMine &7{name} &cdoes not have a valid region.'
     composition-updated: '&aComposition for mine &7{name} &ahas been updated.'
-    
+
+  # Rank messages
+  rank:
+    info: '&aPlayer {player} has rank: &b{rank} &aand prestige level: &b{prestige}'
+    not-found: '&cNo rank data found for player {player}.'
+    set-success: '&aSuccessfully updated {player}''s rank to &b{rank} &awith prestige &b{prestige}'
+    invalid-rank: '&cInvalid rank: {rank}'
+    invalid-prestige: '&cInvalid prestige value: {prestige}'
+    already-max: '&cPlayer {player} already has the maximum rank.'
+    up-success: '&aPlayer {player}''s rank has been upgraded to &b{newrank} &awith prestige &b{prestige}'

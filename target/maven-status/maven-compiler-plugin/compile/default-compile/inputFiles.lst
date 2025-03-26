@@ -1,8 +1,10 @@
 /home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/modules/prison/rang/manager/MineRankManager.java
 /home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/modules/prison/rang/MineRanks.java
 /home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/modules/prison/listener/PlayerConnectionListener.java
+/home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/modules/prison/custompickaxe/connection/PlayerEnchantDataService.java
 /home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/modules/prison/mine/MineCommand.java
-/home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/modules/prison/connection/PlayerEnchantDataService.java
+/home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/modules/prison/rang/RankCommand.java
+/home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/modules/prison/custompickaxe/manager/PlayerEnchantsCacheManager.java
 /home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/core/services/DatabaseConnector.java
 /home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/core/ModuleManager.java
 /home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/core/commands/Command.java
@@ -23,3 +25,5 @@
 /home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/Convergence.java
 /home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/core/PluginModule.java
 /home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/modules/prison/custompickaxe/CustomPickaxe.java
+/home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/modules/prison/custompickaxe/PlayerEnchantData.java
+/home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/modules/prison/rang/manager/PlayerRankCacheManager.java
