@@ -53,7 +53,7 @@ public class MineManager {
         this.plugin = module.getPlugin();
         
         // Load configuration values from the module's config
-        FileConfiguration config = module.getConfig();
+        FileConfiguration config = module.getPrisonConfig();
         this.defaultResetInterval = config.getInt("mines.reset-interval", 300);
         this.broadcastReset = config.getBoolean("mines.broadcast-reset", true);
         

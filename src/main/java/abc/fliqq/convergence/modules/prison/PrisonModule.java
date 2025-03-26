@@ -6,6 +6,8 @@ import abc.fliqq.convergence.Convergence;
 import abc.fliqq.convergence.core.PluginModule;
 import abc.fliqq.convergence.core.utils.LoggerUtil;
 import abc.fliqq.convergence.modules.prison.connection.PlayerEnchantDataService;
+import abc.fliqq.convergence.modules.prison.custompickaxe.listener.PlayerConnectionListener;
+import abc.fliqq.convergence.modules.prison.custompickaxe.manager.EnchantsManager;
 import abc.fliqq.convergence.modules.prison.mine.MineCommand;
 import abc.fliqq.convergence.modules.prison.mine.MineManager;
 import lombok.Getter;
@@ -16,6 +18,8 @@ public class PrisonModule extends PluginModule {
     
     // Managers
     @Getter private MineManager mineManager;
+    @Getter private EnchantsManager enchantsManager;
+    @Getter private PlayerEnchantDataService playerEnchantDataService;
     
     public PrisonModule(Convergence plugin) {
         this.plugin = plugin;
@@ -32,10 +36,11 @@ public class PrisonModule extends PluginModule {
         setupDefaultConfig();
 
         //Connnection to enchant table
-        new PlayerEnchantDataService(plugin.getDatabaseConnector(), prisonConfig);
+        playerEnchantDataService = new PlayerEnchantDataService(plugin.getDatabaseConnector(), prisonConfig);
 
         // Initialize managers
         mineManager = new MineManager(this);
+        enchantsManager = new EnchantsManager(this);
 
         // Register commands
         registerCommands();
@@ -102,6 +107,7 @@ public class PrisonModule extends PluginModule {
     
     private void registerListeners() {
         // TODO: Register prison listeners
+        plugin.getServer().getPluginManager().registerEvents(new PlayerConnectionListener(this), plugin);
         // Example: plugin.getServer().getPluginManager().registerEvents(new MineListener(this), plugin);
     }
     

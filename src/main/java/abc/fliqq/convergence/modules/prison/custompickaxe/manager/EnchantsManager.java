@@ -13,10 +13,12 @@ import abc.fliqq.convergence.core.utils.ColorUtil;
 import abc.fliqq.convergence.core.utils.LoggerUtil;
 import abc.fliqq.convergence.modules.prison.PrisonModule;
 import abc.fliqq.convergence.modules.prison.custompickaxe.CustomEnchant;
+import lombok.Getter;
 
 public class EnchantsManager {
     private final Convergence plugin;
     private final PrisonModule module;
+    @Getter
     private final Map<String, CustomEnchant> enchants = new HashMap<>();
 
     //Parameters from prison config ?
@@ -37,10 +39,11 @@ public class EnchantsManager {
             //Create new enchants file
             enchantConfig = plugin.getConfigManager().createModuleConfiguration(module, "enchants.yml");
 
-            //Setup default enchants
+            //Setup default enchants if nothing in file
             setupDefaultEnchants();
 
             plugin.getConfigManager().saveConfig("modules/prison/enchants.yml");
+            plugin.getConfigManager().loadConfig("modules/prison/enchants.yml");
             
         }
     }

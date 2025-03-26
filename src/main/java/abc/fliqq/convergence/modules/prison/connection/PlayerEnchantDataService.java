@@ -1,7 +1,6 @@
 package abc.fliqq.convergence.modules.prison.connection;
 
 import abc.fliqq.convergence.core.services.DatabaseConnector;
-import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -11,6 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Service spécifique pour gérer les niveaux d'enchantements des joueurs dans le module Prison.
@@ -31,8 +32,7 @@ public class PlayerEnchantDataService {
         this.databaseConnector = databaseConnector;
         // Récupération de la section 'enchants.db' depuis prison/config.yml
         ConfigurationSection enchantsSection = prisonConfig.getConfigurationSection("enchants");
-        ConfigurationSection dbSection = enchantsSection.getConfigurationSection("db");
-        this.enchantTable = dbSection.getString("table");
+        this.enchantTable = enchantsSection.getString("table");
     }
 
     /**
@@ -42,13 +42,13 @@ public class PlayerEnchantDataService {
      * @return une Map contenant les clés d'enchantement et leurs niveaux.
      * @throws SQLException en cas d'erreur SQL.
      */
-    public Map<String, Integer> loadPlayerEnchantLevels(String playerId) throws SQLException {
+    public Map<String, Integer> loadPlayerEnchantLevels(UUID playerUuid) throws SQLException {
         String query = "SELECT enchant_key, level FROM " + enchantTable + " WHERE player_id = ?";
         Map<String, Integer> enchantLevels = new HashMap<>();
 
         try (Connection connection = databaseConnector.getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, playerId);
+            stmt.setString(1, playerUuid.toString());
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     String enchantKey = rs.getString("enchant_key");
@@ -81,4 +81,47 @@ public class PlayerEnchantDataService {
             stmt.executeUpdate();
         }
     }
+
+
+    /**
+     * Vérifie si une ligne existe pour le joueur dans la table des niveaux d'enchantements.
+     * Si non, insère une nouvelle ligne avec toutes les colonnes d'enchant initialisées à 0.
+     *
+     * @param playerId    identifiant du joueur.
+     * @param enchantKeys ensemble des clés d'enchantements disponibles (obtenu depuis EnchantsManager).
+     * @throws SQLException en cas d'erreur d'accès à la BDD.
+     */
+    public void ensurePlayerEnchantRow(String playerId, Set<String> enchantKeys) throws SQLException {
+        // Vérification de l'existence d'une ligne pour le joueur.
+        String querySelect = "SELECT player_id FROM " + enchantTable + " WHERE player_id = ?";
+        try (Connection connection = databaseConnector.getConnection();
+             PreparedStatement selectStmt = connection.prepareStatement(querySelect)) {
+            selectStmt.setString(1, playerId);
+            try (ResultSet rs = selectStmt.executeQuery()) {
+                if (rs.next()) {
+                    // Le joueur existe déjà, on ne fait rien.
+                    return;
+                }
+            }
+        }
+    
+        // Construction dynamique de la requête d'insertion.
+        // On démarre avec la colonne player_id puis on ajoute chacune des clés avec la valeur 0.
+        StringBuilder columns = new StringBuilder("player_id");
+        StringBuilder placeholders = new StringBuilder("?");
+    
+        for (String key : enchantKeys) {
+            columns.append(", ").append(key);
+            placeholders.append(", 0");
+        }
+    
+        String queryInsert = "INSERT INTO " + enchantTable + " (" + columns.toString() + ") VALUES (" + placeholders.toString() + ")";
+    
+        try (Connection connection = databaseConnector.getConnection();
+             PreparedStatement insertStmt = connection.prepareStatement(queryInsert)) {
+            insertStmt.setString(1, playerId);
+            insertStmt.executeUpdate();
+        }
+    }
+
 }

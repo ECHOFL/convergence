@@ -49,12 +49,15 @@ public class Convergence extends JavaPlugin {
     
     @Override
     public void onDisable() {
-        // Disable modules in reverse order
+        //Disable modules in reverse order
         for (int i = modules.size() - 1; i >= 0; i--) {
             modules.get(i).onDisable();
         }
         
         getLogger().info("Convergence has been disabled!");
+
+        // close db connection
+        databaseConnector.shutdown();
     }
     
     /**
