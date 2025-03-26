@@ -44,55 +44,63 @@ public class MessageService {
     /**
      * Reloads the message service
      */
-public void reload() {
-    messages = plugin.getConfigManager().getConfig("messages.yml");
-    if (messages == null) {
-        plugin.getLogger().severe("Failed to load messages.yml - creating default messages");
+    public void reload() {
+        messages = plugin.getConfigManager().getConfig("messages.yml");
+        if (messages == null) {
+            plugin.getLogger().severe("Failed to load messages.yml - creating default messages");
+            
+            // Create a default configuration
+            messages = new YamlConfiguration();
+            messages.set("general.prefix", "&8[&bConvergence&8] &r");
+            messages.set("general.no-permission", "&cYou do not have permission to use this command.");
+            messages.set("general.player-only", "&cThis command can only be used by players.");
+            messages.set("general.invalid-command", "&cInvalid command. Use &7/{command} help &cfor help.");
+            
+            // Add prison module messages
+            messages.set("prison.prefix", "&8[&bPrison&8] &r");
+            messages.set("prison.mine.created", "&aMine &7{name} &ahas been created successfully.");
+            messages.set("prison.mine.deleted", "&aMine &7{name} &ahas been deleted successfully.");
+            messages.set("prison.mine.invalid-mine", "&cMine &7{name} &cdoes not exist.");
+            messages.set("prison.mine.invalid-type", "&cInvalid mine type: &7{type}");
+            messages.set("prison.mine.already-exists", "&cMine &7{name} &calready exists.");
+            messages.set("prison.mine.no-region", "&cMine &7{name} &cdoes not have a valid region.");
+            messages.set("prison.mine.set-pos1", "&aPosition 1 set for mine &7{name}&a.");
+            messages.set("prison.mine.set-pos2", "&aPosition 2 set for mine &7{name}&a.");
+            messages.set("prison.mine.reset", "&aMine &7{name} &ahas been reset.");
+            messages.set("prison.mine.teleported", "&aYou have been teleported to &7{name}&a.");
+            messages.set("prison.mine.composition-updated", "&aComposition for mine &7{name} &ahas been updated.");
+      
+            // Rank commands messages
+            messages.set("rank.info", "&aPlayer {player} has rank: &b{rank} &aand prestige level: &b{prestige}");
+            messages.set("rank.not-found", "&cNo rank data found for player {player}.");
+            messages.set("rank.set-success", "&aSuccessfully updated {player}'s rank to &b{rank} &awith prestige &b{prestige}");
+            messages.set("rank.invalid-rank", "&cInvalid rank: {rank}");
+            messages.set("rank.invalid-prestige", "&cInvalid prestige value: {prestige}");
+            messages.set("rank.already-max", "&cPlayer {player} already has the maximum rank.");
+            messages.set("rank.up-success", "&aPlayer {player}'s rank has been upgraded to &b{newrank} &awith prestige &b{prestige}");
+            // Save the default configuration
+            try {
+                File messagesFile = new File(plugin.getDataFolder(), "messages.yml");
+                messages.save(messagesFile);
+                plugin.getLogger().info("Created default messages.yml file");
+            } catch (IOException e) {
+                plugin.getLogger().severe("Failed to save default messages.yml file");
+                e.printStackTrace();
+            }
+        }
         
-        // Create a default configuration
-        messages = new YamlConfiguration();
-        messages.set("general.prefix", "&8[&bConvergence&8] &r");
-        messages.set("general.no-permission", "&cYou do not have permission to use this command.");
-        messages.set("general.player-only", "&cThis command can only be used by players.");
-        messages.set("general.invalid-command", "&cInvalid command. Use &7/{command} help &cfor help.");
+        // Now we can safely use messages
+        prefix = colorize(messages.getString("general.prefix", "&8[&bConvergence&8] &r"));
         
-        // Add prison module messages
-        messages.set("prison.prefix", "&8[&bPrison&8] &r");
-        messages.set("prison.mine.created", "&aMine &7{name} &ahas been created successfully.");
-        messages.set("prison.mine.deleted", "&aMine &7{name} &ahas been deleted successfully.");
-        messages.set("prison.mine.invalid-mine", "&cMine &7{name} &cdoes not exist.");
-        messages.set("prison.mine.invalid-type", "&cInvalid mine type: &7{type}");
-        messages.set("prison.mine.already-exists", "&cMine &7{name} &calready exists.");
-        messages.set("prison.mine.no-region", "&cMine &7{name} &cdoes not have a valid region.");
-        messages.set("prison.mine.set-pos1", "&aPosition 1 set for mine &7{name}&a.");
-        messages.set("prison.mine.set-pos2", "&aPosition 2 set for mine &7{name}&a.");
-        messages.set("prison.mine.reset", "&aMine &7{name} &ahas been reset.");
-        messages.set("prison.mine.teleported", "&aYou have been teleported to &7{name}&a.");
-        messages.set("prison.mine.composition-updated", "&aComposition for mine &7{name} &ahas been updated.");
-        
-        // Save the default configuration
-        try {
-            File messagesFile = new File(plugin.getDataFolder(), "messages.yml");
-            messages.save(messagesFile);
-            plugin.getLogger().info("Created default messages.yml file");
-        } catch (IOException e) {
-            plugin.getLogger().severe("Failed to save default messages.yml file");
-            e.printStackTrace();
+        // Load module prefixes
+        modulePrefixes.clear();
+        for (String key : messages.getKeys(false)) {
+            if (messages.isConfigurationSection(key) && messages.contains(key + ".prefix")) {
+                String modulePrefix = colorize(messages.getString(key + ".prefix"));
+                modulePrefixes.put(key, modulePrefix);
+            }
         }
     }
-    
-    // Now we can safely use messages
-    prefix = colorize(messages.getString("general.prefix", "&8[&bConvergence&8] &r"));
-    
-    // Load module prefixes
-    modulePrefixes.clear();
-    for (String key : messages.getKeys(false)) {
-        if (messages.isConfigurationSection(key) && messages.contains(key + ".prefix")) {
-            String modulePrefix = colorize(messages.getString(key + ".prefix"));
-            modulePrefixes.put(key, modulePrefix);
-        }
-    }
-}
     
     /**
      * Registers a module with the message service

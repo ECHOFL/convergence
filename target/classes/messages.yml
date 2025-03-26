@@ -29,30 +29,3 @@ prison:
     no-region: '&cMine &7{name} &cdoes not have a valid region.'
     composition-updated: '&aComposition for mine &7{name} &ahas been updated.'
     
-  # Rank messages
-  rank:
-    rankup-success: '&aYou have ranked up to &7{rank}&a!'
-    rankup-fail: '&cYou need &7${cost} &cto rank up to &7{rank}&c.'
-    rankup-max: '&cYou are already at the maximum rank.'
-    current-rank: '&aYour current rank is &7{rank}&a.'
-    set-rank: '&aSet &7{player}''s &arank to &7{rank}&a.'
-    
-    
-  # Prestige messages
-  prestige:
-    prestige-success: '&aYou have prestiged to level &7{level}&a!'
-    prestige-fail: '&cYou need to be at max rank to prestige.'
-    prestige-cost: '&cYou need &7${cost} &cto prestige.'
-    current-prestige: '&aYour current prestige level is &7{level}&a.'
-    set-prestige: '&aSet &7{player}''s &aprestige to &7{level}&a.'
-    
-  # Personal mine messages
-  personal-mine:
-    created: '&aYour personal mine has been created!'
-    teleport: '&aYou have been teleported to your personal mine.'
-    not-unlocked: '&cYou have not unlocked your personal mine yet.'
-    upgrade-size-success: '&aYou have upgraded your mine size to level &7{level}&a!'
-    upgrade-reset-success: '&aYou have upgraded your mine reset speed to level &7{level}&a!'
-    upgrade-composition-success: '&aYou have upgraded your mine composition to level &7{level}&a!'
-    max-level: '&cThis upgrade is already at maximum level.'
-    insufficient-funds: '&cYou need &7${cost} &cto purchase this upgrade.'

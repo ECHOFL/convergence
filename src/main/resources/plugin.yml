@@ -17,11 +17,9 @@ commands:
     description: Mine management commands
     usage: /mine <subcommand>
   rank:
-    description: Rank management commands
-    usage: /rank <subcommand>
-  prestige:
-    description: Prestige management commands
-    usage: /prestige <subcommand>
+    description: Manage player rank and prestige (admin)
+    usage: /rank <info|set|up> <player> [args]
+    aliases: [rang, rg]
 permissions:
   convergence.admin:
     description: Gives access to all Convergence commands
@@ -40,4 +38,7 @@ permissions:
     default: op
   convergence.mine.reload:
     description: Allows reloading the mines configuration
+    default: op
+  convergence.rank.admin:
+    description: Allows administration of player ranks and prestige
     default: op

@@ -14,6 +14,7 @@ import abc.fliqq.convergence.modules.prison.custompickaxe.manager.PlayerEnchants
 import abc.fliqq.convergence.modules.prison.listener.PlayerConnectionListener;
 import abc.fliqq.convergence.modules.prison.mine.MineCommand;
 import abc.fliqq.convergence.modules.prison.mine.MineManager;
+import abc.fliqq.convergence.modules.prison.rang.RankCommand;
 import abc.fliqq.convergence.modules.prison.rang.connection.PlayerRankDataService;
 import abc.fliqq.convergence.modules.prison.rang.manager.MineRankManager;
 import abc.fliqq.convergence.modules.prison.rang.manager.PlayerRankCacheManager;
@@ -169,6 +170,7 @@ public class PrisonModule extends PluginModule {
     private void registerCommands() {
         // TODO: Register prison commands
         new MineCommand(plugin, this);
+        new RankCommand(plugin, this);
     }  
     
     private void registerListeners() {

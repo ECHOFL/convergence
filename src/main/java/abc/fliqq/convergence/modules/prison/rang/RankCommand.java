@@ -71,7 +71,7 @@ public class RankCommand extends Command {
         sender.sendMessage(plugin.getMessageService().colorize("&8&m-----------------------------------------------------"));
         sender.sendMessage(plugin.getMessageService().colorize("&b/rank info <player> &8- &7Display player's rank and prestige"));
         sender.sendMessage(plugin.getMessageService().colorize("&b/rank set <player> <rank> <prestige> &8- &7Set player's rank and prestige"));
-        sender.sendMessage(plugin.getMessageService().colorize("&b/rank up <player> &8- &7Upgrade player's rank (if applicable)"));
+        sender.sendMessage(plugin.getMessageService().colorize("&b/rank up <player> &8- &7Upgrade player's rank"));
         sender.sendMessage(plugin.getMessageService().colorize("&8&m-----------------------------------------------------"));
     }
     
