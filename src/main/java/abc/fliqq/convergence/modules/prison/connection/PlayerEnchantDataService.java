@@ -1,5 +1,6 @@
 package abc.fliqq.convergence.modules.prison.connection;
 
+import abc.fliqq.convergence.Convergence;
 import abc.fliqq.convergence.core.services.DatabaseConnector;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -21,18 +22,21 @@ public class PlayerEnchantDataService {
 
     private final DatabaseConnector databaseConnector;
     private final String enchantTable;
-
+    private final FileConfiguration enchantConfig;
+    private final FileConfiguration prisonConfig;
     /**
      * Construit le service en utilisant le DatabaseConnector et la configuration du module Prison.
      *
      * @param databaseConnector Instance centrale pour la connexion à la BDD.
      * @param prisonConfig      La configuration propre au module Prison (chargée depuis prison/config.yml).
      */
-    public PlayerEnchantDataService(DatabaseConnector databaseConnector, FileConfiguration prisonConfig) {
+    public PlayerEnchantDataService(Convergence plugin, DatabaseConnector databaseConnector) {
         this.databaseConnector = databaseConnector;
-        // Récupération de la section 'enchants.db' depuis prison/config.yml
-        ConfigurationSection enchantsSection = prisonConfig.getConfigurationSection("enchants");
-        this.enchantTable = enchantsSection.getString("table");
+        enchantConfig = plugin.getConfigManager().getConfig("modules/prison/enchants.yml");
+        ConfigurationSection enchantsSection = enchantConfig.getConfigurationSection("enchant-definitions");
+        prisonConfig = plugin.getConfigManager().getConfig("modules/prison/config.yml");
+        ConfigurationSection enchantsDbSection = prisonConfig.getConfigurationSection("enchants");
+        enchantTable = enchantsDbSection.getString("table");
 
         // Vérification de l'existence de la table et des colonnes
         try {
@@ -132,58 +136,66 @@ public class PlayerEnchantDataService {
     }
 
 
-    /**
-     * Vérifie si la table des niveaux d'enchantements existe et si elle possède bien toutes les colonnes correspondant
-     * aux clés d'enchantements définies dans la configuration (via EnchantsManager). 
-     * - Si la table n'existe pas, elle est créée avec la colonne 'player_id' et une colonne INT par enchant initialisée à 0.
-     * - Si la table existe déjà, les colonnes manquantes sont ajoutées.
-     *
-     * @param enchantKeys ensemble des clés d'enchantements disponibles (obtenu depuis EnchantsManager).
-     * @throws SQLException en cas d'erreur d'accès à la BDD.
-     */
-    public void verifyAndUpdateTable(Set<String> enchantKeys) throws SQLException {
-        try (Connection connection = databaseConnector.getConnection()) {
-            // Utiliser les métadonnées pour vérifier si la table existe
-            boolean tableExists = false;
-            var metaData = connection.getMetaData();
-            try (ResultSet tables = metaData.getTables(null, null, enchantTable, new String[]{"TABLE"})) {
-                if (tables.next()) {
-                    tableExists = true;
+
+/**
+ * Vérifie si la table des niveaux d'enchantements existe et
+ * s'assure qu'elle possède une colonne pour chaque enchantement défini dans enchants.yml.
+ * 
+ * - Si la table n'existe pas, elle est créée avec la colonne 'player_id' (clé primaire)
+ *   et une colonne INT DEFAULT 0 pour chaque clé d'enchantement.
+ * - Si la table existe déjà, les colonnes manquantes sont ajoutées.
+ *
+ * IMPORTANT : L'ensemble enchantKeys doit contenir uniquement les clés provenant de la section
+ * "enchant-definitions" du fichier enchants.yml (ex : efficiency, fortune, explosion, etc.).
+ *
+ * @param enchantKeys Ensemble des clés d'enchantements.
+ * @throws SQLException En cas d'erreur lors des opérations SQL.
+ */
+public void verifyAndUpdateTable(Set<String> enchantKeys) throws SQLException {
+    try (Connection connection = databaseConnector.getConnection()) {
+        // Vérifier si la table existe déjà
+        boolean tableExists = false;
+        var metaData = connection.getMetaData();
+        try (ResultSet tables = metaData.getTables(null, null, enchantTable, new String[]{"TABLE"})) {
+            if (tables.next()) {
+                tableExists = true;
+            }
+        }
+
+        if (!tableExists) {
+            // La table n'existe pas, on la crée avec 'player_id' et une colonne pour chaque enchantement.
+            StringBuilder createQuery = new StringBuilder("CREATE TABLE " + enchantTable + " (player_id VARCHAR(36) PRIMARY KEY");
+            for (String key : enchantKeys) {
+                // Encadrer le nom de la colonne avec des backticks
+                createQuery.append(", `").append(key).append("` INT DEFAULT 0");
+            }
+            createQuery.append(")");
+            try (PreparedStatement stmt = connection.prepareStatement(createQuery.toString())) {
+                stmt.executeUpdate();
+            }
+        } else {
+            // La table existe : vérifier et ajouter les colonnes manquantes.
+            Map<String, Boolean> existingColumns = new HashMap<>();
+            try (ResultSet columns = metaData.getColumns(null, null, enchantTable, null)) {
+                while (columns.next()) {
+                    String columnName = columns.getString("COLUMN_NAME");
+                    existingColumns.put(columnName.toLowerCase(), true);
                 }
             }
-    
-            if (!tableExists) {
-                // La table n'existe pas, on la crée avec une colonne 'player_id' (PK) et une colonne pour chaque enchantement
-                StringBuilder createQuery = new StringBuilder("CREATE TABLE " + enchantTable + " (player_id VARCHAR(36) PRIMARY KEY");
-                for (String key : enchantKeys) {
-                    createQuery.append(", ").append(key).append(" INT DEFAULT 0");
-                }
-                createQuery.append(")");
-                try (PreparedStatement stmt = connection.prepareStatement(createQuery.toString())) {
-                    stmt.executeUpdate();
-                }
-            } else {
-                // La table existe : on vérifie les colonnes existantes pour ajouter celles manquantes.
-                Map<String, Boolean> existingColumns = new HashMap<>();
-                try (ResultSet columns = metaData.getColumns(null, null, enchantTable, null)) {
-                    while (columns.next()) {
-                        String columnName = columns.getString("COLUMN_NAME");
-                        existingColumns.put(columnName.toLowerCase(), true);
-                    }
-                }
-    
-                // Pour chaque enchant key défini dans la configuration, on ajoute la colonne si elle n'existe pas
-                for (String key : enchantKeys) {
-                    if (!existingColumns.containsKey(key.toLowerCase())) {
-                        String alterQuery = "ALTER TABLE " + enchantTable + " ADD COLUMN " + key + " INT DEFAULT 0";
-                        try (PreparedStatement stmt = connection.prepareStatement(alterQuery)) {
-                            stmt.executeUpdate();
-                        }
+
+            // Pour chaque clé d'enchantement, on ajoute la colonne si elle n'existe pas
+            for (String key : enchantKeys) {
+                if (!existingColumns.containsKey(key.toLowerCase())) {
+                    String alterQuery = "ALTER TABLE " + enchantTable + " ADD COLUMN `" + key + "` INT DEFAULT 0";
+                    try (PreparedStatement stmt = connection.prepareStatement(alterQuery)) {
+                        stmt.executeUpdate();
                     }
                 }
             }
         }
     }
+}
+
 
 
 }

@@ -35,12 +35,12 @@ public class PrisonModule extends PluginModule {
         prisonConfig = plugin.getConfigManager().createModuleConfiguration(this, "config.yml");
         setupDefaultConfig();
 
-        //Connnection to enchant table
-        playerEnchantDataService = new PlayerEnchantDataService(plugin.getDatabaseConnector(), prisonConfig);
-
         // Initialize managers
         mineManager = new MineManager(this);
         enchantsManager = new EnchantsManager(this);
+
+        //Connnection to enchant table
+        playerEnchantDataService = new PlayerEnchantDataService(plugin, plugin.getDatabaseConnector());
 
         // Register commands
         registerCommands();
@@ -48,6 +48,7 @@ public class PrisonModule extends PluginModule {
         // Register Listeners
         registerListeners();
 
+        
         LoggerUtil.info(getName() + " module has been enabled!");
     }
     

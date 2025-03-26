@@ -11,8 +11,8 @@ database:
     host: localhost
     port: 3306
     database: convergence
-    username: root
-    password: password
+    username: admin
+    password: mtheo
     ssl: false
   
 # Module settings

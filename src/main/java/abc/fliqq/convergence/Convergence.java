@@ -56,8 +56,9 @@ public class Convergence extends JavaPlugin {
         
         getLogger().info("Convergence has been disabled!");
 
-        // close db connection
-        databaseConnector.shutdown();
+        if(databaseConnector != null){
+            databaseConnector.shutdown();
+        }
     }
     
     /**
