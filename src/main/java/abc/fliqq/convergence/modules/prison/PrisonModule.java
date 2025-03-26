@@ -1,17 +1,22 @@
 package abc.fliqq.convergence.modules.prison;
 
+import java.sql.SQLException;
+
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.scheduler.BukkitTask;
 
 import abc.fliqq.convergence.Convergence;
 import abc.fliqq.convergence.core.PluginModule;
 import abc.fliqq.convergence.core.utils.LoggerUtil;
-import abc.fliqq.convergence.modules.prison.connection.PlayerEnchantDataService;
-import abc.fliqq.convergence.modules.prison.custompickaxe.listener.PlayerConnectionListener;
+import abc.fliqq.convergence.modules.prison.custompickaxe.connection.PlayerEnchantDataService;
 import abc.fliqq.convergence.modules.prison.custompickaxe.manager.EnchantsManager;
+import abc.fliqq.convergence.modules.prison.custompickaxe.manager.PlayerEnchantsCacheManager;
+import abc.fliqq.convergence.modules.prison.listener.PlayerConnectionListener;
 import abc.fliqq.convergence.modules.prison.mine.MineCommand;
 import abc.fliqq.convergence.modules.prison.mine.MineManager;
 import abc.fliqq.convergence.modules.prison.rang.connection.PlayerRankDataService;
 import abc.fliqq.convergence.modules.prison.rang.manager.MineRankManager;
+import abc.fliqq.convergence.modules.prison.rang.manager.PlayerRankCacheManager;
 import lombok.Getter;
 
 public class PrisonModule extends PluginModule {
@@ -23,12 +28,20 @@ public class PrisonModule extends PluginModule {
     @Getter private EnchantsManager enchantsManager;
     @Getter private MineRankManager mineRankManager;
 
+    //caches
+    @Getter private PlayerEnchantsCacheManager playerEnchantsCacheManager;
+    @Getter private PlayerRankCacheManager playerRankCacheManager;
+
     // Connection to enchant table
     @Getter private PlayerEnchantDataService playerEnchantDataService;
 
     // Connection to rank table
     @Getter
     private PlayerRankDataService playerRankDataService;
+
+    //task
+    private BukkitTask autoSaveTask;
+    
     
     public PrisonModule(Convergence plugin) {
         this.plugin = plugin;
@@ -53,6 +66,18 @@ public class PrisonModule extends PluginModule {
         playerEnchantDataService = new PlayerEnchantDataService(plugin, plugin.getDatabaseConnector());
         playerRankDataService = new PlayerRankDataService(plugin, plugin.getDatabaseConnector(), mineRankManager);
 
+        // Initialize caches
+        playerEnchantsCacheManager = new PlayerEnchantsCacheManager();
+        playerRankCacheManager = new PlayerRankCacheManager();
+
+        //Task
+        autoSaveTask = plugin.getServer().getScheduler().runTaskTimerAsynchronously(
+            plugin,
+            this::saveAllCaches,
+            12_000L,
+            12_000L
+        );
+
         // Register commands
         registerCommands();
 
@@ -65,11 +90,18 @@ public class PrisonModule extends PluginModule {
     
     @Override
     public void onDisable() {
-        // Save Data Managers
-        if (mineManager != null) {
+        // Save Data Managers INUTILE ?
+        if (mineManager != null)
             mineManager.shutdown();
-        }
         
+        if(autoSaveTask != null && !autoSaveTask.isCancelled())
+            autoSaveTask.cancel();
+        
+        saveAllCaches();
+        //nettoyer caches
+        playerRankCacheManager.getCache().clear();
+        playerEnchantsCacheManager.getCache().clear();
+
         LoggerUtil.info(getName() + " module has been disabled!");
     }
 
@@ -82,7 +114,29 @@ public class PrisonModule extends PluginModule {
             mineManager.reload();
         }
 
+        saveAllCaches();
+
         LoggerUtil.info(getName() + " module has been reloaded!");
+    }
+
+        private void saveAllCaches() {
+        // Sauvegarde des enchantements
+        playerEnchantsCacheManager.getCache().forEach((playerId, enchantData) -> {
+            try {
+                playerEnchantDataService.saveOrUpdatePlayerEnchantData(playerId, enchantData);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        });
+        // Sauvegarde des PlayerRank
+        playerRankCacheManager.getCache().forEach((playerId, rank) -> {
+            try {
+                playerRankDataService.saveOrUpdatePlayerRank(rank);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        });
+        LoggerUtil.info(getName() + " caches have been auto-saved.");
     }
 
     private void setupDefaultConfig() {
