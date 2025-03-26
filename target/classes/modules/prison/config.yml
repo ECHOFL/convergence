@@ -10,32 +10,11 @@ mines:
 
 # Rank settings
 ranks:
+  #SQL TABLE
+  table: "PlayerMinesRank"
   use-vault-integration: true
   default-rank: "A"
-  # Rank progression (A-Z)
-  progression:
-    A:
-      next: "B"
-      cost: 5000
-    B:
-      next: "C"
-      cost: 10000
-    C:
-      next: "D"
-      cost: 25000
-    D:
-      next: "E"
-      cost: 50000
-    E:
-      next: "F"
-      cost: 100000
-    F:
-      next: "G"
-      cost: 250000
-    # Continue with more ranks...
-    Z:
-      next: "none"
-      cost: 0
+  # Rank progression (A-Z) = mine progression
 
 # Prestige settings
 prestige:
@@ -63,34 +42,6 @@ personal-mines:
   composition-upgrade-cost-base: 100000
   composition-upgrade-cost-multiplier: 1.5
   
-  # Composition levels (materials and percentages)
-  compositions:
-    1:
-      STONE: 80.0
-      COAL_ORE: 15.0
-      IRON_ORE: 5.0
-    2:
-      STONE: 75.0
-      COAL_ORE: 15.0
-      IRON_ORE: 8.0
-      GOLD_ORE: 2.0
-    3:
-      STONE: 70.0
-      COAL_ORE: 15.0
-      IRON_ORE: 10.0
-      GOLD_ORE: 3.0
-      LAPIS_ORE: 2.0
-    # Continue with more levels...
-    10:
-      STONE: 40.0
-      COAL_ORE: 15.0
-      IRON_ORE: 15.0
-      GOLD_ORE: 10.0
-      LAPIS_ORE: 8.0
-      REDSTONE_ORE: 5.0
-      DIAMOND_ORE: 5.0
-      EMERALD_ORE: 2.0
-
 # Enchant settings
 enchants:
   max-level: 1000

@@ -1,11 +1,15 @@
 /home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/modules/prison/custompickaxe/CustomEnchant.java
 /home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/modules/prison/PrisonModule.java
 /home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/modules/prison/mine/MineCommand.java
+/home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/modules/prison/mine/AbstractMine.java
+/home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/modules/prison/rang/manager/PlayerRankManager.java
+/home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/modules/prison/rang/PlayerRank.java
 /home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/modules/prison/connection/PlayerEnchantDataService.java
 /home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/core/config/ConfigManager.java
 /home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/modules/prison/custompickaxe/manager/EnchantsManager.java
 /home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/core/services/DatabaseConnector.java
 /home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/core/ModuleManager.java
+/home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/modules/prison/rang/connection/PlayerRankDataService.java
 /home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/modules/prison/mine/Mine.java
 /home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/core/commands/Command.java
 /home/mtheo/Documents/dev/java/plugins/convergence/src/main/java/abc/fliqq/convergence/modules/prison/custompickaxe/manager/PickaxeManager.java

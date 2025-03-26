@@ -10,6 +10,8 @@ import abc.fliqq.convergence.modules.prison.custompickaxe.listener.PlayerConnect
 import abc.fliqq.convergence.modules.prison.custompickaxe.manager.EnchantsManager;
 import abc.fliqq.convergence.modules.prison.mine.MineCommand;
 import abc.fliqq.convergence.modules.prison.mine.MineManager;
+import abc.fliqq.convergence.modules.prison.rang.connection.PlayerRankDataService;
+import abc.fliqq.convergence.modules.prison.rang.manager.MineRankManager;
 import lombok.Getter;
 
 public class PrisonModule extends PluginModule {
@@ -19,7 +21,14 @@ public class PrisonModule extends PluginModule {
     // Managers
     @Getter private MineManager mineManager;
     @Getter private EnchantsManager enchantsManager;
+    @Getter private MineRankManager mineRankManager;
+
+    // Connection to enchant table
     @Getter private PlayerEnchantDataService playerEnchantDataService;
+
+    // Connection to rank table
+    @Getter
+    private PlayerRankDataService playerRankDataService;
     
     public PrisonModule(Convergence plugin) {
         this.plugin = plugin;
@@ -38,9 +47,11 @@ public class PrisonModule extends PluginModule {
         // Initialize managers
         mineManager = new MineManager(this);
         enchantsManager = new EnchantsManager(this);
+        mineRankManager = new MineRankManager(this);
 
         //Connnection to enchant table
         playerEnchantDataService = new PlayerEnchantDataService(plugin, plugin.getDatabaseConnector());
+        playerRankDataService = new PlayerRankDataService(plugin, plugin.getDatabaseConnector(), mineRankManager);
 
         // Register commands
         registerCommands();

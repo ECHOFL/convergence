@@ -3,7 +3,6 @@ package abc.fliqq.convergence.modules.prison.mine;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -20,7 +19,6 @@ import org.bukkit.scheduler.BukkitTask;
 import abc.fliqq.convergence.Convergence;
 import abc.fliqq.convergence.core.utils.LoggerUtil;
 import abc.fliqq.convergence.modules.prison.PrisonModule;
-import abc.fliqq.convergence.modules.prison.mine.Mine.MineType;
 import lombok.Getter;
 
 public class MineManager {
@@ -30,11 +28,11 @@ public class MineManager {
     
     // Maps to store different types of mines
     @Getter private final Map<String, Mine> rankMines = new HashMap<>();
-    @Getter private final Map<String, Mine> prestigeMines = new HashMap<>();
-    @Getter private final Map<UUID, Mine> personalMines = new HashMap<>();
-    
     // Map to track reset tasks
     private final Map<String, BukkitTask> resetTasks = new HashMap<>();
+
+    @Getter
+    private final Map<Mine, Integer> mineWithPrice = new HashMap<>();
     
     // Configuration values from the module config (not the mine config)
     private final int defaultResetInterval;
@@ -94,6 +92,7 @@ public class MineManager {
         mineA.set("name", "Mine A");
         mineA.set("requiredRank", "A");
         mineA.set("resetInterval", defaultResetInterval);
+        mineA.set("price", 0);
         ConfigurationSection compositionA = mineA.createSection("composition");
         compositionA.set("STONE", 70.0);
         compositionA.set("COAL_ORE", 20.0);
@@ -104,15 +103,14 @@ public class MineManager {
         mineB.set("name", "Mine B");
         mineB.set("requiredRank", "B");
         mineB.set("resetInterval", defaultResetInterval);
+        mineB.set("price", 10000);
         ConfigurationSection compositionB = mineB.createSection("composition");
         compositionB.set("STONE", 60.0);
         compositionB.set("COAL_ORE", 20.0);
         compositionB.set("IRON_ORE", 15.0);
         compositionB.set("GOLD_ORE", 5.0);
         
-        // Création des sections pour les mines de prestige et personnelles (initialement vides)
-        mineConfig.createSection("prestigeMines");
-        mineConfig.createSection("personalMines");
+        
     }
     
     /**
@@ -129,10 +127,13 @@ public class MineManager {
                 String name = mineSection.getString("name", key);
                 String requiredRank = mineSection.getString("requiredRank", key);
                 int resetInterval = mineSection.getInt("resetInterval", defaultResetInterval);
+                int price = mineSection.getInt("price", 0);
+
+
     
                 Mine mine = rankMines.get(key); // Vérifie si la mine existe déjà
                 if (mine == null) {
-                    mine = new Mine(key, name, MineType.RANK, resetInterval);
+                    mine = new Mine(key, name, resetInterval);
                     rankMines.put(key, mine);
                 }
     
@@ -159,88 +160,10 @@ public class MineManager {
                         }
                     }
                 }
+
+                mineWithPrice.put(mine, price);
     
                 LoggerUtil.info("Loaded rank mine: " + name);
-            }
-        }
-        
-        // Load prestige mines
-        ConfigurationSection prestigeMinesSection = mineConfig.getConfigurationSection("prestigeMines");
-        if (prestigeMinesSection != null) {
-            for (String key : prestigeMinesSection.getKeys(false)) {
-                ConfigurationSection mineSection = prestigeMinesSection.getConfigurationSection(key);
-                if (mineSection == null) continue;
-                
-                String name = mineSection.getString("name", "Prestige " + key);
-                int requiredPrestige = mineSection.getInt("requiredPrestige", Integer.parseInt(key));
-                int resetInterval = mineSection.getInt("resetInterval", defaultResetInterval);
-                
-                Mine mine = new Mine(key, name, MineType.PRESTIGE, resetInterval);
-                mine.setRequiredPrestige(requiredPrestige);
-                
-                if (mineSection.contains("pos1") && mineSection.contains("pos2")) {
-                    mine.setPos1(deserializeLocation(mineSection.getConfigurationSection("pos1")));
-                    mine.setPos2(deserializeLocation(mineSection.getConfigurationSection("pos2")));
-                }
-                
-                ConfigurationSection compositionSection = mineSection.getConfigurationSection("composition");
-                if (compositionSection != null) {
-                    for (String material : compositionSection.getKeys(false)) {
-                        try {
-                            Material mat = Material.valueOf(material);
-                            double percentage = compositionSection.getDouble(material);
-                            mine.addMaterial(mat, percentage);
-                        } catch (IllegalArgumentException e) {
-                            LoggerUtil.warning("Invalid material in mine composition: " + material);
-                        }
-                    }
-                }
-                
-                prestigeMines.put(key, mine);
-                LoggerUtil.info("Loaded prestige mine: " + name);
-            }
-        }
-        
-        // Load personal mines
-        ConfigurationSection personalMinesSection = mineConfig.getConfigurationSection("personalMines");
-        if (personalMinesSection != null) {
-            for (String key : personalMinesSection.getKeys(false)) {
-                ConfigurationSection mineSection = personalMinesSection.getConfigurationSection(key);
-                if (mineSection == null) continue;
-                try {
-                    UUID ownerUUID = UUID.fromString(key);
-                    String name = mineSection.getString("name", "Personal Mine");
-                    int resetInterval = mineSection.getInt("resetInterval", defaultResetInterval);
-                    
-                    Mine mine = new Mine(key, name, ownerUUID, resetInterval);
-                    
-                    if (mineSection.contains("pos1") && mineSection.contains("pos2")) {
-                        mine.setPos1(deserializeLocation(mineSection.getConfigurationSection("pos1")));
-                        mine.setPos2(deserializeLocation(mineSection.getConfigurationSection("pos2")));
-                    }
-                    
-                    mine.setSize(mineSection.getInt("size", 1));
-                    mine.setResetSpeed(mineSection.getInt("resetSpeed", 1));
-                    mine.setCompositionLevel(mineSection.getInt("compositionLevel", 1));
-                    
-                    ConfigurationSection compositionSection = mineSection.getConfigurationSection("composition");
-                    if (compositionSection != null) {
-                        for (String material : compositionSection.getKeys(false)) {
-                            try {
-                                Material mat = Material.valueOf(material);
-                                double percentage = compositionSection.getDouble(material);
-                                mine.addMaterial(mat, percentage);
-                            } catch (IllegalArgumentException e) {
-                                LoggerUtil.warning("Invalid material in mine composition: " + material);
-                            }
-                        }
-                    }
-                    
-                    personalMines.put(ownerUUID, mine);
-                    LoggerUtil.info("Loaded personal mine for player: " + ownerUUID);
-                } catch (IllegalArgumentException e) {
-                    LoggerUtil.warning("Invalid UUID in personal mines: " + key);
-                }
             }
         }
     }
@@ -250,12 +173,6 @@ public class MineManager {
      */
     private void startResetTasks() {
         for (Mine mine : rankMines.values()) {
-            scheduleResetTask(mine);
-        }
-        for (Mine mine : prestigeMines.values()) {
-            scheduleResetTask(mine);
-        }
-        for (Mine mine : personalMines.values()) {
             scheduleResetTask(mine);
         }
     }
@@ -350,75 +267,28 @@ public class MineManager {
     }
     
     public Mine createRankMine(String id, String name, String requiredRank, int resetInterval) {
-        Mine mine = new Mine(id, name, MineType.RANK, resetInterval);
+        Mine mine = new Mine(id, name, resetInterval);
         mine.setRequiredRank(requiredRank);
         rankMines.put(id, mine);
         return mine;
     }
+
     
-    public Mine createPrestigeMine(String id, String name, int requiredPrestige, int resetInterval) {
-        Mine mine = new Mine(id, name, MineType.PRESTIGE, resetInterval);
-        mine.setRequiredPrestige(requiredPrestige);
-        prestigeMines.put(id, mine);
-        return mine;
+    public Mine getMine(String id) {
+       return rankMines.get(id);
     }
+
     
-    public Mine createPersonalMine(UUID ownerUUID, String name, int resetInterval) {
-        Mine mine = new Mine(ownerUUID.toString(), name, ownerUUID, resetInterval);
-        personalMines.put(ownerUUID, mine);
-        return mine;
-    }
-    
-    public Mine getMine(String id, MineType type) {
-        switch (type) {
-            case RANK:
-                return rankMines.get(id);
-            case PRESTIGE:
-                return prestigeMines.get(id);
-            case PERSONAL:
-                try {
-                    return personalMines.get(UUID.fromString(id));
-                } catch (IllegalArgumentException e) {
-                    return null;
-                }
-            default:
-                return null;
-        }
-    }
-    
-    public Mine getPersonalMine(UUID ownerUUID) {
-        return personalMines.get(ownerUUID);
-    }
-    
-    public Collection<Mine> getMinesByType(MineType type) {
-        switch (type) {
-            case RANK:
-                return rankMines.values();
-            case PRESTIGE:
-                return prestigeMines.values();
-            case PERSONAL:
-                return personalMines.values();
-            default:
-                return null;
-        }
-    }
     
     public Collection<Mine> getAllMines() {
         Collection<Mine> allMines = rankMines.values().stream().collect(Collectors.toList());
-        allMines.addAll(prestigeMines.values());
-        allMines.addAll(personalMines.values());
         return allMines;
     }
     
     public void saveMines() {
         mineConfig.set("rankMines", null);
-        mineConfig.set("prestigeMines", null);
-        mineConfig.set("personalMines", null);
         
         ConfigurationSection rankMinesSection = mineConfig.createSection("rankMines");
-        ConfigurationSection prestigeMinesSection = mineConfig.createSection("prestigeMines");
-        ConfigurationSection personalMinesSection = mineConfig.createSection("personalMines");
-        
         for (Map.Entry<String, Mine> entry : rankMines.entrySet()) {
             String id = entry.getKey();
             Mine mine = entry.getValue();
@@ -426,19 +296,6 @@ public class MineManager {
             saveMineToConfig(mine, mineSection);
         }
         
-        for (Map.Entry<String, Mine> entry : prestigeMines.entrySet()) {
-            String id = entry.getKey();
-            Mine mine = entry.getValue();
-            ConfigurationSection mineSection = prestigeMinesSection.createSection(id);
-            saveMineToConfig(mine, mineSection);
-        }
-        
-        for (Map.Entry<UUID, Mine> entry : personalMines.entrySet()) {
-            UUID ownerUUID = entry.getKey();
-            Mine mine = entry.getValue();
-            ConfigurationSection mineSection = personalMinesSection.createSection(ownerUUID.toString());
-            saveMineToConfig(mine, mineSection);
-        }
         
         plugin.getConfigManager().saveConfig("modules/prison/mines.yml");
     }
@@ -446,16 +303,8 @@ public class MineManager {
     private void saveMineToConfig(Mine mine, ConfigurationSection section) {
         section.set("name", mine.getName());
         section.set("resetInterval", mine.getResetInterval());
-        
-        if (mine.isRankMine()) {
-            section.set("requiredRank", mine.getRequiredRank());
-        } else if (mine.isPrestigeMine()) {
-            section.set("requiredPrestige", mine.getRequiredPrestige());
-        } else if (mine.isPersonalMine()) {
-            section.set("size", mine.getSize());
-            section.set("resetSpeed", mine.getResetSpeed());
-            section.set("compositionLevel", mine.getCompositionLevel());
-        }
+        section.set("requiredRank", mine.getRequiredRank());
+    
         
         if (mine.hasValidRegion()) {
             section.createSection("pos1", serializeLocation(mine.getPos1()));
@@ -503,8 +352,6 @@ public class MineManager {
         }
         resetTasks.clear();
         rankMines.clear();
-        prestigeMines.clear();
-        personalMines.clear();
         mineConfig = plugin.getConfigManager().getConfig("modules/prison/mines.yml");
         loadMines();
         startResetTasks();
