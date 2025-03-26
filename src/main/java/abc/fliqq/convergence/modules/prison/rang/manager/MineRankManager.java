@@ -1,4 +1,3 @@
-
 package abc.fliqq.convergence.modules.prison.rang.manager;
 
 import java.util.ArrayList;
@@ -38,7 +37,7 @@ public class MineRankManager {
         loadRanks();
     }
 
-        /**
+    /**
      * Récupère le MineRanks correspondant à l'identifiant fourni.
      *
      * @param id L'identifiant de la mine.
@@ -51,5 +50,20 @@ public class MineRankManager {
             }
         }
         return null;
+    }
+    
+    /**
+     * Retourne le rang "suivant" à partir du rang actuel.
+     * Si le rang actuel est le dernier de la liste, retourne null.
+     *
+     * @param currentRank Le rang actuel du joueur.
+     * @return Le rang suivant, ou null si le joueur est déjà au rang maximum.
+     */
+    public MineRanks getNextRank(MineRanks currentRank) {
+        int index = mineRanks.indexOf(currentRank);
+        if(index == -1 || index == mineRanks.size() - 1) {
+            return null;
+        }
+        return mineRanks.get(index + 1);
     }
 }
