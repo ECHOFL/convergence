@@ -1,7 +1,6 @@
 abc/fliqq/convergence/modules/prison/mine/MineManager$1.class
 abc/fliqq/convergence/modules/prison/rang/RankCommand.class
 abc/fliqq/convergence/core/services/DatabaseConnector.class
-abc/fliqq/convergence/modules/prison/rang/RankCommand$UpSubCommand.class
 abc/fliqq/convergence/modules/prison/mine/MineCommand.class
 abc/fliqq/convergence/Convergence.class
 abc/fliqq/convergence/core/utils/LoggerUtil.class

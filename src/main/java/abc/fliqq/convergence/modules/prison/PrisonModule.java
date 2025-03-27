@@ -75,8 +75,8 @@ public class PrisonModule extends PluginModule {
         autoSaveTask = plugin.getServer().getScheduler().runTaskTimerAsynchronously(
             plugin,
             this::saveAllCaches,
-            12_000L,
-            12_000L
+            6_000L,
+            6_000L
         );
 
         // Register commands
